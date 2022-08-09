@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build on docker
-        run: Docker build .
+        run: docker build .
       # - name: Install requirements
       #   run: |
       #     sudo apt-get install -yqq git openssl wget python3 xz-utils lsb-release dialog apt-utils software-properties-common
