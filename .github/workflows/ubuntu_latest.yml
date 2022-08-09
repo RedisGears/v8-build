@@ -24,7 +24,8 @@ jobs:
         gclient
     - name: Checkout v8
       run: |
-        mkdir v8; cd v8; fetch v8
+        export PATH="${PATH}:$(pwd)/depot_tools/"
+        mkdir v8 && cd v8 && fetch v8
     - name: Set timezone
       run: |
         ln -snf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime && echo America/Los_Angeles > /etc/timezone
@@ -48,7 +49,7 @@ jobs:
         secret_key: ${{ secrets.AWS_SECRET_KEY_ID }}
     - name: Upload artifacts
       run: |
-        s3cmd put -P /build/v8/v8/out.gn/x64.release.sample/obj/libv8_monolith.a ${{ secrets.AWS_PATH }}/libv8_monolith.${{ env.v8_version }}.x86.linux.a
-        s3cmd put -P /build/v8/v8/out.gn/arm64.release.sample/obj/libv8_monolith.a ${{ secrets.AWS_PATH }}/libv8_monolith.${{ env.v8_version }}.arm64.linux.a
-
-      
+        mkdir s3uploads
+        cp /build/v8/v8/out.gn/x64.release.sample/obj/libv8_monolith.a s3uploads
+        cp /build/v8/v8/out.gn/arm64.release.sample/obj/libv8_monolith.a s3uploads
+        s3cmd put -P s3uploads/* s3://redismodules/redisgears/dependencies/
