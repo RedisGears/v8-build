@@ -9,47 +9,47 @@ env:
   v8_version: 10.4.132.20
 
 jobs:
+
   build:
 
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Install requirements
-      run: apt-get install -yqq git openssl wget python3 xz-utils lsb-release sudo dialog apt-utils
-    - name: Install depot_tools
-      run: |
-        git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-        export PATH="${PATH}:$(pwd)/depot_tools/"
-        gclient
-    - name: Checkout v8
-      run: |
-        export PATH="${PATH}:$(pwd)/depot_tools/"
-        mkdir v8 && cd v8 && fetch v8
-    - name: Set timezone
-      run: |
-        ln -snf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime && echo America/Los_Angeles > /etc/timezone
-    - name: Build v8
-      run: |
-        cd v8/v8
-        git checkout ${{ env.v8_version }}
-        sed -i 's/${dev_list} snapcraft/${dev_list}/g' ./build/install-build-deps.sh
-        ./build/install-build-deps.sh --no-prompt
-        ./tools/dev/gm.py x64.release
-        ./tools/dev/gm.py arm64.release
-        ./tools/dev/v8gen.py x64.release.sample; ninja -C out.gn/x64.release.sample v8_monolith
-        ./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
-        ./tools/dev/v8gen.py arm64.release.sample; ninja -C out.gn/arm64.release.sample v8_monolith
-    - name: Upload artifacts
-    - uses: s3-actions/s3cmd@v1.2.0
-      with:
-        provider: aws
-        region: us-east-2
-        access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        secret_key: ${{ secrets.AWS_SECRET_KEY_ID }}
-    - name: Upload artifacts
-      run: |
-        mkdir s3uploads
-        cp /build/v8/v8/out.gn/x64.release.sample/obj/libv8_monolith.a s3uploads
-        cp /build/v8/v8/out.gn/arm64.release.sample/obj/libv8_monolith.a s3uploads
-        s3cmd put -P s3uploads/* s3://redismodules/redisgears/dependencies/
+      - uses: actions/checkout@v3
+      - name: Install requirements
+        run: apt-get install -yqq git openssl wget python3 xz-utils lsb-release sudo dialog apt-utils
+      - name: Install depot_tools
+        run: |
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+          export PATH="${PATH}:$(pwd)/depot_tools/"
+          gclient
+      - name: Checkout v8
+        run: |
+          export PATH="${PATH}:$(pwd)/depot_tools/"
+          mkdir v8 && cd v8 && fetch v8
+      - name: Set timezone
+        run: |
+          ln -snf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime && echo America/Los_Angeles > /etc/timezone
+      - name: Build v8
+        run: |
+          cd v8/v8
+          git checkout ${{ env.v8_version }}
+          sed -i 's/${dev_list} snapcraft/${dev_list}/g' ./build/install-build-deps.sh
+          ./build/install-build-deps.sh --no-prompt
+          ./tools/dev/gm.py x64.release
+          ./tools/dev/gm.py arm64.release
+          ./tools/dev/v8gen.py x64.release.sample; ninja -C out.gn/x64.release.sample v8_monolith
+          ./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
+          ./tools/dev/v8gen.py arm64.release.sample; ninja -C out.gn/arm64.release.sample v8_monolith
+      - name: Upload artifacts
+        uses: s3-actions/s3cmd@v1.2.0
+        with:
+          provider: aws
+          region: us-east-2
+          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_key: ${{ secrets.AWS_SECRET_KEY_ID }}
+      - name: Upload artifacts
+        run: |
+          mkdir s3uploads
+          cp /build/v8/v8/out.gn/x64.release.sample/obj/libv8_monolith.a s3uploads
+          cp /build/v8/v8/out.gn/arm64.release.sample/obj/libv8_monolith.a s3uploads
+          s3cmd put -P s3uploads/* s3://redismodules/redisgears/dependencies/
