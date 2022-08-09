@@ -26,9 +26,6 @@ jobs:
         run: |
           export PATH="${PATH}:$(pwd)/depot_tools/"
           mkdir v8 && cd v8 && fetch v8
-      - name: Set timezone
-        run: |
-          ln -snf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime && echo America/Los_Angeles > /etc/timezone
       - name: Build v8
         run: |
           cd v8/v8
