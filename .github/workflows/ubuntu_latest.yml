@@ -18,11 +18,11 @@ jobs:
       - name: Install requirements
         run: |
           sudo apt-get install -yqq git openssl wget python3 xz-utils lsb-release dialog apt-utils software-properties-common
-          apt-get install -yqq gcc-9 g++-9
-          update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9
-          update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9
-          update-alternatives --set gcc /usr/bin/gcc-9
-          update-alternatives --set g++ /usr/bin/g++-9
+          sudo apt-get install -yqq gcc-9 g++-9
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9
+          sudo update-alternatives --set gcc /usr/bin/gcc-9
+          sudo update-alternatives --set g++ /usr/bin/g++-9
       - name: Install depot_tools
         run: |
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
