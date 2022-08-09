@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install requirements
-        run: apt-get install -yqq git openssl wget python3 xz-utils lsb-release sudo dialog apt-utils
+        run: sudo apt-get install -yqq git openssl wget python3 xz-utils lsb-release dialog apt-utils
       - name: Install depot_tools
         run: |
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
