@@ -28,6 +28,7 @@ jobs:
           mkdir v8 && cd v8 && fetch v8
       - name: Build v8
         run: |
+          export PATH="${PATH}:$(pwd)/depot_tools/"
           cd v8/v8
           git checkout ${{ env.v8_version }}
           sed -i 's/${dev_list} snapcraft/${dev_list}/g' ./build/install-build-deps.sh
