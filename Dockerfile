@@ -1,8 +1,6 @@
 FROM ubuntu:focal
 
-ARG BUILD_TYPE "release"
 ARG VERSION "10.4.132.20"
-ARG ARCH "x64"
 
 WORKDIR /build
 
@@ -31,3 +29,4 @@ RUN ./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
 RUN ./tools/dev/v8gen.py arm64.release.sample; ninja -C out.gn/arm64.release.sample v8_monolith
 
 # v8 monolith is located under: /build/v8/v8/out.gn/x64.release.sample/obj/libv8_monolith.a
+# v8 monolith is located under: /build/v8/v8/out.gn/arm64.release.sample/obj/libv8_monolith.a
