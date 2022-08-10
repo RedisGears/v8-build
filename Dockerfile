@@ -22,7 +22,7 @@ WORKDIR v8/v8/
 RUN git checkout ${VERSION}
 RUN sed -i 's/${dev_list} snapcraft/${dev_list}/g' ./build/install-build-deps.sh
 RUN ./build/install-build-deps.sh --no-prompt
-RUN ./tools/dev/v8gen.py x64.release
+RUN ./tools/dev/v8gen.py x64.release -- v8_monolithic=true
 RUN ninja -C out.gn/x64.release v8_monolith
 RUN ./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
 RUN ./tools/dev/v8gen.py arm64.release -- v8_monolithic=true \
