@@ -23,7 +23,7 @@ RUN git checkout ${VERSION}
 RUN sed -i 's/${dev_list} snapcraft/${dev_list}/g' ./build/install-build-deps.sh
 RUN ./build/install-build-deps.sh --no-prompt
 RUN ./tools/dev/v8gen.py x64.release -- v8_monolithic=true \
-    v8_use_external_startup_data=false \
+    v8_use_external_startup_data=false
 RUN ninja -C out.gn/x64.release v8_monolith
 RUN ./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
 RUN ./tools/dev/v8gen.py arm64.release -- v8_monolithic=true \
