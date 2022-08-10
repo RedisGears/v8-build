@@ -18,7 +18,7 @@ jobs:
       # - name: Build on docker
       #   run: docker build -t v8_build --build-arg VERSION=${{ env.v8_version }} .
       - name: Run docker in background
-        run: docker run -dt --name v8_build_container ubuntu:lastest
+        run: docker run -dt --name v8_build_container ubuntu:latest
       - name: Test copy artifacts out
         run: docker cp v8_build_container:/usr/bin/sum ./
       # - name: Copy build artifacts out of container
