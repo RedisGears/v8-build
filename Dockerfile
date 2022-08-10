@@ -1,6 +1,6 @@
 FROM ubuntu:focal
 
-ARG VERSION "10.4.132.20"
+ARG VERSION
 
 WORKDIR /build
 
