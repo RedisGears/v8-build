@@ -18,10 +18,10 @@ jobs:
       - name: Install depot_tools
         run: |
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-          export PATH="${PATH}:$(pwd)/depot_tools/"
-          gclient
       - name: Checkout v8
         run: |
+          export PATH="${PATH}:$(pwd)/depot_tools/"
+          gclient
           mkdir v8
           cd v8
           fetch v8
