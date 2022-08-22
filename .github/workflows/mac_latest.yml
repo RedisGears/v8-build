@@ -1,0 +1,34 @@
+name: Mac Latest
+
+on:
+  push:
+    branches: [ master, mac_support ]
+
+env:
+  CARGO_TERM_COLOR: always
+  v8_version: 10.4.132.20
+
+jobs:
+
+  build:
+
+    runs-on: macos-12
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install depot_tools
+        run: |
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+          export PATH="${PATH}:$(pwd)/depot_tools/"
+          gclient
+      - name: Checkout v8
+        run: |
+          mkdir v8
+          cd v8
+          fetch v8
+          cd v8
+          git checkout ${{ env.v8_version }}
+      - name: Build v8
+        run: |
+          cd v8/v8/
+          ./tools/dev/v8gen.py x64.release -- v8_monolithic=true v8_use_external_startup_data=false use_custom_libcxx=false
+          ninja -C out.gn/x64.release v8_monolith
