@@ -35,3 +35,17 @@ jobs:
           cd v8/v8/
           ./tools/dev/v8gen.py x64.release -- v8_monolithic=true v8_use_external_startup_data=false use_custom_libcxx=false
           ninja -C out.gn/x64.release v8_monolith
+      - name: Copy build artifacts out of container
+        run: |
+          mkdir s3uploads
+          cp v8/v8/out.gn/x64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ env.v8_version }}.x64.apple-darwin.a
+      - name: Upload artifacts
+        uses: s3-actions/s3cmd@v1.2.0
+        with:
+          provider: aws
+          region: us-east-2
+          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_key: ${{ secrets.AWS_SECRET_KEY_ID }}
+      - name: Upload artifacts
+        run: |
+          s3cmd put -P s3uploads/* s3://redismodules/redisgears/dependencies/
