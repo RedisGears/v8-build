@@ -2,7 +2,7 @@ name: Mac Latest
 
 on:
   push:
-    branches: [ master, mac_support ]
+    branches: [ master ]
 
 env:
   CARGO_TERM_COLOR: always
