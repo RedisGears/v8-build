@@ -1,0 +1,51 @@
+name: Mac Latest
+
+on:
+  push:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+  v8_version: 10.4.132.20
+
+jobs:
+
+  build:
+
+    runs-on: macos-12
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Pre Requisite
+        run: |
+          brew install ninja
+      - name: Install depot_tools
+        run: |
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+      - name: Checkout v8
+        run: |
+          export PATH="${PATH}:$(pwd)/depot_tools/"
+          gclient
+          mkdir v8
+          cd v8
+          fetch v8
+          cd v8
+          git checkout ${{ env.v8_version }}
+      - name: Build v8
+        run: |
+          cd v8/v8/
+          ./tools/dev/v8gen.py x64.release -- v8_monolithic=true v8_use_external_startup_data=false use_custom_libcxx=false
+          ninja -C out.gn/x64.release v8_monolith
+      - name: Copy build artifacts out of container
+        run: |
+          mkdir s3uploads
+          cp v8/v8/out.gn/x64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ env.v8_version }}.x64.apple-darwin.a
+      - name: Upload artifacts
+        uses: s3-actions/s3cmd@v1.2.0
+        with:
+          provider: aws
+          region: us-east-2
+          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_key: ${{ secrets.AWS_SECRET_KEY_ID }}
+      - name: Upload artifacts
+        run: |
+          s3cmd put -P s3uploads/* s3://redismodules/redisgears/dependencies/
