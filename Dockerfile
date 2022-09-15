@@ -24,7 +24,8 @@ RUN sed -i 's/${dev_list} snapcraft/${dev_list}/g' ./build/install-build-deps.sh
 RUN ./build/install-build-deps.sh --no-prompt
 RUN ./tools/dev/v8gen.py x64.release -- v8_monolithic=true \
     v8_use_external_startup_data=false \
-    use_custom_libcxx=false
+    use_custom_libcxx=false \
+    treat_warnings_as_errors=false
 RUN ninja -C out.gn/x64.release v8_monolith
 RUN ./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
 RUN ./tools/dev/v8gen.py arm64.release -- v8_monolithic=true \
@@ -38,7 +39,8 @@ RUN ./tools/dev/v8gen.py arm64.release -- v8_monolithic=true \
     v8_enable_i18n_support=false \
     v8_use_external_startup_data=false \
     use_custom_libcxx=false \
-    use_sysroot=false
+    use_sysroot=false \
+    treat_warnings_as_errors=false
 RUN ninja -C out.gn/arm64.release v8_monolith
 
 # v8 monolith is located under: /build/v8/v8/out.gn/x64.release/obj/libv8_monolith.a
