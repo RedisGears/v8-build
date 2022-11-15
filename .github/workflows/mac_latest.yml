@@ -23,7 +23,7 @@ jobs:
           access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_key: ${{ secrets.AWS_SECRET_KEY_ID }}
       - name: Verify s3cmd
-        run: python3 -m s3cmd --help
+        run: python -m s3cmd --help
       - name: Install Pre Requisite
         run: |
           brew install ninja
