@@ -8,7 +8,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
   v8_version: 10.7.193.22
-  python_version: 3.1:
+  python_version: 3.11
 
 jobs:
 
