@@ -1,12 +1,14 @@
 name: Mac Latest
 
 on:
-  push:
-    branches: [ master ]
+  pull_request:
+#  push:
+#    branches: [ master ]
 
 env:
   CARGO_TERM_COLOR: always
   v8_version: 10.7.193.22
+  python_version: 3.1:
 
 jobs:
 
@@ -15,15 +17,9 @@ jobs:
     runs-on: macos-12
     steps:
       - uses: actions/checkout@v3
-      - name: Configure s3cmd
-        uses: s3-actions/s3cmd@v1.2.0
+      - uses: actions/setup-python@v4
         with:
-          provider: aws
-          region: us-east-2
-          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret_key: ${{ secrets.AWS_SECRET_KEY_ID }}
-      - name: Verify s3cmd
-        run: s3cmd --help
+          python-version: "${{env.python_version}}"
       - name: Install Pre Requisite
         run: |
           brew install ninja
@@ -48,6 +44,13 @@ jobs:
         run: |
           mkdir s3uploads
           cp v8/v8/out.gn/x64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ env.v8_version }}.x64.apple-darwin.a
+      - name: Configure s3cmd
+        uses: s3-actions/s3cmd@v1.2.0
+        with:
+          provider: aws
+          region: us-east-2
+          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_key: ${{ secrets.AWS_SECRET_KEY_ID }}
       - name: Upload artifacts
         run: |
           s3cmd put -P s3uploads/* s3://redismodules/redisgears/dependencies/
