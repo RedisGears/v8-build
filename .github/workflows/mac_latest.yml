@@ -6,7 +6,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  v8_version: 10.8.168.21
+  v8_version: 11.0.226.16
 
 jobs:
 
