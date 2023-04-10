@@ -1,29 +1,33 @@
-name: Ubuntu Latest
+name: Ubunru Build and Publish
 
 on:
-  push:
-    branches: [ master ]
-
-env:
-  CARGO_TERM_COLOR: always
-  v8_version: 11.0.226.16
+  workflow_call:
+    inputs:
+      v8_branch:
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_KEY_ID:
+        required: true
 
 jobs:
 
-  build:
+  build-and-publish:
 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Build on docker
-        run: docker build -t v8_build --build-arg VERSION=${{ env.v8_version }} .
+        run: docker build -t v8_build --build-arg VERSION=${{ inputs.v8_branch }} .
       - name: Run docker in background
         run: docker run -dt --name v8_build_container v8_build
       - name: Copy build artifacts out of container
         run: |
           mkdir s3uploads
-          docker cp v8_build_container:/build/v8/v8/out.gn/x64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ env.v8_version }}.x64.linux.a
-          docker cp v8_build_container:/build/v8/v8/out.gn/arm64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ env.v8_version }}.arm64.linux.a
+          docker cp v8_build_container:/build/v8/v8/out.gn/x64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.x64.linux.a
+          docker cp v8_build_container:/build/v8/v8/out.gn/arm64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.arm64.linux.a
       - name: Upload artifacts
         uses: s3-actions/s3cmd@v1.2.0
         with:
