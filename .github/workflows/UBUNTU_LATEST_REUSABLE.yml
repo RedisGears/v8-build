@@ -29,7 +29,7 @@ jobs:
           docker cp v8_build_container:/build/v8/v8/out.gn/x64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.x64.linux.a
           docker cp v8_build_container:/build/v8/v8/out.gn/arm64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.arm64.linux.a
           docker cp v8_build_container:/build/v8/v8/include s3uploads/libv8.${{ inputs.v8_branch }}.include
-          pushd s3uploads/libv8.${{ inputs.v8_branch }}.include/; zip ../libv8.${{ inputs.v8_branch }}.include.zip *; popd
+          pushd s3uploads/libv8.${{ inputs.v8_branch }}.include/; zip -r ../libv8.${{ inputs.v8_branch }}.include.zip *; popd
           rm -rf s3uploads/libv8.${{ inputs.v8_branch }}.include
       - name: Upload artifacts
         uses: s3-actions/s3cmd@v1.2.0
