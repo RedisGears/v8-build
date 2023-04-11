@@ -1,16 +1,20 @@
-name: Mac Latest
+name: Ubunru Build and Publish
 
 on:
-  push:
-    branches: [ master ]
-
-env:
-  CARGO_TERM_COLOR: always
-  v8_version: 11.0.226.16
+  workflow_call:
+    inputs:
+      v8_branch:
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_KEY_ID:
+        required: true
 
 jobs:
 
-  build:
+  build-and-publish:
 
     runs-on: macos-12
     steps:
@@ -32,7 +36,7 @@ jobs:
           cd v8
           fetch v8
           cd v8
-          git checkout ${{ env.v8_version }}
+          git checkout ${{ inputs.v8_branch }}
       - name: Build v8
         run: |
           cd v8/v8/
@@ -43,8 +47,8 @@ jobs:
       - name: Copy build artifacts out of container
         run: |
           mkdir s3uploads
-          cp v8/v8/out.gn/x64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ env.v8_version }}.x64.apple-darwin.a
-          cp v8/v8/out.gn/arm64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ env.v8_version }}.arm64.apple-darwin.a
+          cp v8/v8/out.gn/x64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.x64.apple-darwin.a
+          cp v8/v8/out.gn/arm64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.arm64.apple-darwin.a
       - name: Configure s3cmd
         uses: s3-actions/s3cmd@v1.2.0
         with:

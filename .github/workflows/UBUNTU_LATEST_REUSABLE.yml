@@ -1,0 +1,43 @@
+name: Ubunru Build and Publish
+
+on:
+  workflow_call:
+    inputs:
+      v8_branch:
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_KEY_ID:
+        required: true
+
+jobs:
+
+  build-and-publish:
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build on docker
+        run: docker build -t v8_build --build-arg VERSION=${{ inputs.v8_branch }} .
+      - name: Run docker in background
+        run: docker run -dt --name v8_build_container v8_build
+      - name: Copy build artifacts out of container
+        run: |
+          mkdir s3uploads
+          docker cp v8_build_container:/build/v8/v8/out.gn/x64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.x64.linux.a
+          docker cp v8_build_container:/build/v8/v8/out.gn/arm64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.arm64.linux.a
+          docker cp v8_build_container:/build/v8/v8/include s3uploads/libv8.${{ inputs.v8_branch }}.include
+          pushd s3uploads/libv8.${{ inputs.v8_branch }}.include/; zip -r ../libv8.${{ inputs.v8_branch }}.include.zip *; popd
+          rm -rf s3uploads/libv8.${{ inputs.v8_branch }}.include
+      - name: Upload artifacts
+        uses: s3-actions/s3cmd@v1.2.0
+        with:
+          provider: aws
+          region: us-east-2
+          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_key: ${{ secrets.AWS_SECRET_KEY_ID }}
+      - name: Upload artifacts
+        run: |
+          s3cmd put -P s3uploads/* s3://redismodules/redisgears/dependencies/
