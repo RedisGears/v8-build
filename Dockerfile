@@ -1,11 +1,11 @@
-FROM ubuntu:focal
+FROM ubuntu:jammy
 
 ARG VERSION
 
 WORKDIR /build
 
 RUN apt-get update -qq
-RUN apt-get install -yqq git openssl wget python3 python xz-utils lsb-release sudo dialog apt-utils g++-aarch64-linux-gnu
+RUN apt-get install -yqq git openssl wget python3 xz-utils lsb-release sudo dialog apt-utils g++-aarch64-linux-gnu file locales pkg-config
 
 RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
 
@@ -20,7 +20,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR v8/v8/ 
 RUN git checkout ${VERSION}
-RUN sed -i 's/${dev_list} snapcraft/${dev_list}/g' ./build/install-build-deps.sh
+RUN sed -i 's/"--short"].decode().strip())/"--short"]).decode().strip()/g' ./build/install-build-deps.py
 RUN ./build/install-build-deps.sh --no-prompt
 RUN ./tools/dev/v8gen.py x64.release -- v8_monolithic=true \
    v8_use_external_startup_data=false \
