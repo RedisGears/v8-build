@@ -21,6 +21,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 WORKDIR v8/v8/ 
 RUN git checkout ${VERSION}
 RUN sed -i 's/"--short"].decode().strip())/"--short"]).decode().strip()/g' ./build/install-build-deps.py
+RUN sed -i 's/"\/sbin\/init"].decode()):/"\/sbin\/init"]).decode():/g' ./build/install-build-deps.py
 RUN ./build/install-build-deps.sh --no-prompt
 RUN ./tools/dev/v8gen.py x64.release -- v8_monolithic=true \
    v8_use_external_startup_data=false \
