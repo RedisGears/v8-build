@@ -31,9 +31,9 @@ RUN ./tools/dev/v8gen.py x64.release -- v8_monolithic=true \
    treat_warnings_as_errors=false \
    v8_enable_pointer_compression_shared_cage = false
 RUN ninja -C out.gn/x64.release v8_monolith
-# RUN ./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
-# RUN gn gen out.gn/arm64.release --args='target_cpu="arm64" v8_monolithic=true v8_static_library=true is_debug=false is_official_build=false treat_warnings_as_errors=false v8_use_external_startup_data=false use_custom_libcxx=false v8_untrusted_code_mitigations=true'
-# RUN ninja -C out.gn/arm64.release v8_monolith
+RUN ./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
+RUN gn gen out.gn/arm64.release --args='target_cpu="arm64" v8_monolithic=true v8_static_library=true is_debug=false is_official_build=false treat_warnings_as_errors=false v8_use_external_startup_data=false use_custom_libcxx=false v8_untrusted_code_mitigations=true'
+RUN ninja -C out.gn/arm64.release v8_monolith
 
 # v8 monolith is located under: /build/v8/v8/out.gn/x64.release/obj/libv8_monolith.a
 # v8 monolith is located under: /build/v8/v8/out.gn/arm64.release/obj/libv8_monolith.a
