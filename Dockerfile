@@ -27,8 +27,8 @@ RUN sed -i 's/"\/sbin\/init"].decode()):/"\/sbin\/init"]).decode():/g' ./build/i
 # not need to install snap.
 RUN sed -i 's/packages.append("snapcraft")/pass/g' ./build/install-build-deps.py
 RUN ./build/install-build-deps.sh --no-prompt
-COPY build_${BUILD_TYPE}.${ARCH}.bash ./
-RUN build_${BUILD_TYPE}.${ARCH}.bash
+COPY build_linux_${ARCH}.${BUILD_TYPE}.bash .
+RUN /bin/bash ./build_linux_${ARCH}.${BUILD_TYPE}.bash
 
 # v8 monolith x64 release is located under: /build/v8/v8/out.gn/x64.release/obj/libv8_monolith.a
 # v8 monolith x64 debug is located under: /build/v8/v8/out.gn/x64.debug/obj/libv8_monolith.a
