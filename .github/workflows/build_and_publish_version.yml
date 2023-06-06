@@ -16,6 +16,7 @@ jobs:
       v8_branch: 11.4.183.19
       build_type: release
       arch: x64
+      copy_headers: true
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY_ID }}
