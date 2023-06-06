@@ -6,6 +6,16 @@ on:
       v8_branch:
         required: true
         type: string
+      build_type:
+        required: true
+        type: string
+      arch:
+        required: true
+        type: string
+      copy_headers:
+        required: false
+        type: boolean
+        default: false
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -20,14 +30,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build on docker
-        run: docker build -t v8_build --build-arg VERSION=${{ inputs.v8_branch }} .
+        run: docker build -t v8_build --build-arg VERSION=${{ inputs.v8_branch }} --build-arg BUILD_TYPE=${{ inputs.build_type }} --build-arg ARCH=${{ inputs.arch }} .
       - name: Run docker in background
         run: docker run -dt --name v8_build_container v8_build
       - name: Copy build artifacts out of container
         run: |
           mkdir s3uploads
-          docker cp v8_build_container:/build/v8/v8/out.gn/x64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.x64.linux.a
-          docker cp v8_build_container:/build/v8/v8/out.gn/arm64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.arm64.linux.a
+          docker cp v8_build_container:/build/v8/v8/out.gn/${{ inputs.arch }}.${{ inputs.build_type }}/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.${{ inputs.arch }}.${{ inputs.build_type }}.linux.a
+      - name: Copy headers
+        if: ${{inputs.copy_headers == true}}
+        run: |
           docker cp v8_build_container:/build/v8/v8/include s3uploads/libv8.${{ inputs.v8_branch }}.include
           pushd s3uploads/libv8.${{ inputs.v8_branch }}.include/; zip -r ../libv8.${{ inputs.v8_branch }}.include.zip *; popd
           rm -rf s3uploads/libv8.${{ inputs.v8_branch }}.include

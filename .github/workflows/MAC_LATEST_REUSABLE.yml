@@ -6,6 +6,12 @@ on:
       v8_branch:
         required: true
         type: string
+      build_type:
+        required: true
+        type: string
+      arch:
+        required: true
+        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -39,16 +45,11 @@ jobs:
           git checkout ${{ inputs.v8_branch }}
       - name: Build v8
         run: |
-          cd v8/v8/
-          ./tools/dev/v8gen.py x64.release -- v8_monolithic=true v8_use_external_startup_data=false use_custom_libcxx=false treat_warnings_as_errors=false v8_untrusted_code_mitigations=true
-          ninja -C out.gn/x64.release v8_monolith
-          ./tools/dev/v8gen.py arm64.release -- 'target_cpu="arm64" v8_monolithic=true v8_use_external_startup_data=false use_custom_libcxx=false treat_warnings_as_errors=false v8_untrusted_code_mitigations=true'
-          ninja -C out.gn/arm64.release v8_monolith
+          bash ./build_mac_${{ inputs.arch }}.${{ inputs.build_type }}.bash
       - name: Copy build artifacts out of container
         run: |
           mkdir s3uploads
-          cp v8/v8/out.gn/x64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.x64.apple-darwin.a
-          cp v8/v8/out.gn/arm64.release/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.arm64.apple-darwin.a
+          cp v8/v8/out.gn/${{ inputs.arch }}.${{ inputs.build_type }}/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.${{ inputs.arch }}.${{ inputs.build_type }}.apple-darwin.a
       - name: Configure s3cmd
         uses: s3-actions/s3cmd@v1.2.0
         with:
