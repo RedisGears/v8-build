@@ -39,6 +39,7 @@ jobs:
           docker cp v8_build_container:/build/v8/v8/out.gn/${{ inputs.build_type }}.${{ inputs.arch }}/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.${{ inputs.arch }}.${{ inputs.build_type }}.linux.a
       - name: Copy headers
         if: ${{inputs.copy_headers == true}}
+        run: |
           docker cp v8_build_container:/build/v8/v8/include s3uploads/libv8.${{ inputs.v8_branch }}.include
           pushd s3uploads/libv8.${{ inputs.v8_branch }}.include/; zip -r ../libv8.${{ inputs.v8_branch }}.include.zip *; popd
           rm -rf s3uploads/libv8.${{ inputs.v8_branch }}.include
