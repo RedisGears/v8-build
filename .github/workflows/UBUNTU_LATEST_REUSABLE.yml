@@ -6,6 +6,12 @@ on:
       v8_branch:
         required: true
         type: string
+      build_type:
+        required: true
+        type: string
+      arch:
+        required: true
+        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -20,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build on docker
-        run: docker build -t v8_build --build-arg VERSION=${{ inputs.v8_branch }} .
+        run: docker build -t v8_build --build-arg VERSION=${{ inputs.v8_branch }} BUILD_TYPE=${{ inputs.build_type }} ARCH=${{ inputs.arch }} .
       - name: Run docker in background
         run: docker run -dt --name v8_build_container v8_build
       - name: Copy build artifacts out of container
