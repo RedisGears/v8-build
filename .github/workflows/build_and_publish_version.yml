@@ -13,7 +13,7 @@ jobs:
   build-and-publish-linux-x64-release:
     uses: ./.github/workflows/UBUNTU_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.4.183.26
+      v8_branch: 11.4.183.27
       build_type: release
       arch: x64
       copy_headers: true
@@ -24,7 +24,7 @@ jobs:
   build-and-publish-linux-x64-debug:
     uses: ./.github/workflows/UBUNTU_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.4.183.26
+      v8_branch: 11.4.183.27
       build_type: debug
       arch: x64
     secrets:
@@ -34,7 +34,7 @@ jobs:
   build-and-publish-linux-arm64-release:
     uses: ./.github/workflows/UBUNTU_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.4.183.26
+      v8_branch: 11.4.183.27
       build_type: release
       arch: arm64
     secrets:
@@ -44,7 +44,7 @@ jobs:
   build-and-publish-linux-arm64-debug:
     uses: ./.github/workflows/UBUNTU_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.4.183.26
+      v8_branch: 11.4.183.27
       build_type: debug
       arch: arm64
     secrets:
@@ -54,7 +54,7 @@ jobs:
   build-and-publish-mac-x64-release:
     uses: ./.github/workflows/MAC_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.4.183.26
+      v8_branch: 11.4.183.27
       build_type: release
       arch: x64
     secrets:
@@ -64,7 +64,7 @@ jobs:
   build-and-publish-mac-x64-debug:
     uses: ./.github/workflows/MAC_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.4.183.26
+      v8_branch: 11.4.183.27
       build_type: debug
       arch: x64
     secrets:
@@ -74,7 +74,7 @@ jobs:
   build-and-publish-mac-arm64-release:
     uses: ./.github/workflows/MAC_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.4.183.26
+      v8_branch: 11.4.183.27
       build_type: release
       arch: arm64
     secrets:
@@ -84,7 +84,7 @@ jobs:
   build-and-publish-mac-arm64-debug:
     uses: ./.github/workflows/MAC_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.4.183.26
+      v8_branch: 11.4.183.27
       build_type: debug
       arch: arm64
     secrets:
