@@ -8,12 +8,13 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  v8_branch: 11.5.150.18
 
 jobs:
   build-and-publish-linux-x64-release:
     uses: ./.github/workflows/UBUNTU_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.5.150.18
+      v8_branch: ${{env.v8_branch}}
       build_type: release
       arch: x64
       copy_headers: true
@@ -24,7 +25,7 @@ jobs:
   build-and-publish-linux-x64-debug:
     uses: ./.github/workflows/UBUNTU_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.5.150.18
+      v8_branch: ${{env.v8_branch}}
       build_type: debug
       arch: x64
     secrets:
@@ -34,7 +35,7 @@ jobs:
   build-and-publish-linux-arm64-release:
     uses: ./.github/workflows/UBUNTU_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.5.150.18
+      v8_branch: ${{env.v8_branch}}
       build_type: release
       arch: arm64
     secrets:
@@ -44,7 +45,7 @@ jobs:
   build-and-publish-linux-arm64-debug:
     uses: ./.github/workflows/UBUNTU_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.5.150.18
+      v8_branch: ${{env.v8_branch}}
       build_type: debug
       arch: arm64
     secrets:
@@ -54,17 +55,17 @@ jobs:
   build-and-publish-mac-x64-release:
     uses: ./.github/workflows/MAC_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.5.150.18
+      v8_branch: ${{env.v8_branch}}
       build_type: release
       arch: x64
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY_ID }}
-  
+
   build-and-publish-mac-x64-debug:
     uses: ./.github/workflows/MAC_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.5.150.18
+      v8_branch: ${{env.v8_branch}}
       build_type: debug
       arch: x64
     secrets:
@@ -74,7 +75,7 @@ jobs:
   build-and-publish-mac-arm64-release:
     uses: ./.github/workflows/MAC_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.5.150.18
+      v8_branch: ${{env.v8_branch}}
       build_type: release
       arch: arm64
     secrets:
@@ -84,7 +85,7 @@ jobs:
   build-and-publish-mac-arm64-debug:
     uses: ./.github/workflows/MAC_LATEST_REUSABLE.yml
     with:
-      v8_branch: 11.5.150.18
+      v8_branch: ${{env.v8_branch}}
       build_type: debug
       arch: arm64
     secrets:
