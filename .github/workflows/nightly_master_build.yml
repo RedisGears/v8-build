@@ -6,6 +6,8 @@ on:
 
   schedule:
     - cron: "0 5 * * *"
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build-and-publish-linux-x64-release:
