@@ -26,8 +26,6 @@ RUN sed -i 's/"--short"].decode().strip())/"--short"]).decode().strip()/g' ./bui
 RUN sed -i 's/"\/sbin\/init"].decode()):/"\/sbin\/init"]).decode():/g' ./build/install-build-deps.py
 # not need to install snap.
 RUN sed -i 's/packages.append("snapcraft")/pass/g' ./build/install-build-deps.py
-RUN sed -i 's/#include <uchar.h>//g' ./src/inspector/v8-string-conversions.h
-
 RUN ./build/install-build-deps.sh --no-prompt
 COPY build_linux_${ARCH}.${BUILD_TYPE}.bash .
 RUN /bin/bash ./build_linux_${ARCH}.${BUILD_TYPE}.bash
