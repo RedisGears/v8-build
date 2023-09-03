@@ -1,0 +1,52 @@
+name: Check for new V8 version
+
+# todo: change to nightly before merge
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  get-v8-version:
+    uses: ./.github/workflows/GET_V8_VERSION.yml
+
+  check-for-new-V8-version:
+    needs: [get-v8-version]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install depot_tools
+        run: |
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+      - name: Checkout v8 and set the version on env var
+        id: get-latest-version
+        run: |
+          export v1=`echo ${{ needs.get-v8-version.output.V8_VERSION }} | cut -d'.' -f1`
+          export v2=`echo ${{ needs.get-v8-version.output.V8_VERSION }} | cut -d'.' -f2`
+          export version=$v1.$v2
+          export PATH="${PATH}:$(pwd)/depot_tools/"
+          gclient
+          mkdir v8
+          cd v8
+          fetch v8
+          cd v8
+          git checkout branch-heads/$version
+          export latest_version=`git describe --tags --exact-match`
+          echo "latest_version=$latest_version" >> "$GITHUB_OUTPUT"
+      - name: Checkout PR was already created
+        id: is-branch-exists
+        env:
+          latest_version: ${{ steps.get-latest-version.outputs.latest_version }}
+        run: |
+          git fetch
+          export branch_exists=`git show-branch origin/update_version_to_${{ steps.get-latest-version.outputs.latest_version }} &>/dev/null && echo yes || echo no`
+          echo "branch_exists=$branch_exists" >> "$GITHUB_OUTPUT"
+      - name: Create PR if needed
+        env:
+          latest_version: ${{ steps.get-latest-version.outputs.latest_version }}
+          branch_exists: ${{ steps.is-branch-exists.outputs.branch_exists }}
+        if: ${{needs.get-v8-version.output.V8_VERSION != env.latest_version && env.branch_exists == 'no'}}
+        run: |
+          echo "New version was tagged we should build it!!"
+
+      

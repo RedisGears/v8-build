@@ -1,0 +1,23 @@
+name: Get V8 Version
+
+on:
+  workflow_call:
+    # Map the workflow outputs to job outputs
+    outputs:
+      V8_VERSION:
+        description: "Return the current V8 version"
+        value: ${{ jobs.get-env.outputs.V8_VERSION }}
+
+env:
+  CARGO_TERM_COLOR: always
+  V8_VERSION: 11.6.189.19
+
+jobs:
+
+  get-env:
+    name: Get Current V8 Version
+    runs-on: ubuntu-latest
+    outputs:
+      V8_VERSION: ${{ env.V8_VERSION }}
+    steps:
+      - run: echo ${{ env.V8_VERSION }}

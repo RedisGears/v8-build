@@ -12,25 +12,14 @@ env:
 
 jobs:
 
-  get-env:
-    name: Get Environment variables
-    runs-on: ubuntu-latest
-    outputs:
-      V8_BRANCH: ${{ env.V8_BRANCH }}
-    steps:
-      - run: echo "null"
-
-  check-for-new-V8-version:
-    needs: [get-env]
-    uses: ./.github/workflows/CHECK_FOR_NEW_V8_VERSION.yml
-    with:
-      current_v8_version: ${{ needs.get-env.outputs.V8_BRANCH }}
+  get-v8-version:
+    uses: ./.github/workflows/GET_V8_VERSION.yml
 
   # build-and-publish-linux-x64-release:
-  #   needs: [get-env]
+  #   needs: [get-v8-version]
   #   uses: ./.github/workflows/UBUNTU_LATEST_REUSABLE.yml
   #   with:
-  #     v8_branch: ${{ needs.get-env.outputs.V8_BRANCH }}
+  #     v8_branch: ${{ needs.get-v8-version.outputs.V8_VERSION }}
   #     build_type: release
   #     arch: x64
   #     copy_headers: true
@@ -39,10 +28,10 @@ jobs:
   #     AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY_ID }}
 
   # build-and-publish-linux-x64-debug:
-  #   needs: [get-env]
+  #   needs: [get-v8-version]
   #   uses: ./.github/workflows/UBUNTU_LATEST_REUSABLE.yml
   #   with:
-  #     v8_branch: ${{ needs.get-env.outputs.V8_BRANCH }}
+  #     v8_branch: ${{ needs.get-v8-version.outputs.V8_VERSION }}
   #     build_type: debug
   #     arch: x64
   #   secrets:
@@ -50,10 +39,10 @@ jobs:
   #     AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY_ID }}
 
   # build-and-publish-linux-arm64-release:
-  #   needs: [get-env]
+  #   needs: [get-v8-version]
   #   uses: ./.github/workflows/UBUNTU_LATEST_REUSABLE.yml
   #   with:
-  #     v8_branch: ${{ needs.get-env.outputs.V8_BRANCH }}
+  #     v8_branch: ${{ needs.get-v8-version.outputs.V8_VERSION }}
   #     build_type: release
   #     arch: arm64
   #   secrets:
@@ -61,10 +50,10 @@ jobs:
   #     AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY_ID }}
 
   # build-and-publish-linux-arm64-debug:
-  #   needs: [get-env]
+  #   needs: [get-v8-version]
   #   uses: ./.github/workflows/UBUNTU_LATEST_REUSABLE.yml
   #   with:
-  #     v8_branch: ${{ needs.get-env.outputs.V8_BRANCH }}
+  #     v8_branch: ${{ needs.get-v8-version.outputs.V8_VERSION }}
   #     build_type: debug
   #     arch: arm64
   #   secrets:
@@ -72,10 +61,10 @@ jobs:
   #     AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY_ID }}
 
   # build-and-publish-mac-x64-release:
-  #   needs: [get-env]
+  #   needs: [get-v8-version]
   #   uses: ./.github/workflows/MAC_LATEST_REUSABLE.yml
   #   with:
-  #     v8_branch: ${{ needs.get-env.outputs.V8_BRANCH }}
+  #     v8_branch: ${{ needs.get-v8-version.outputs.V8_VERSION }}
   #     build_type: release
   #     arch: x64
   #   secrets:
@@ -83,10 +72,10 @@ jobs:
   #     AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY_ID }}
 
   # build-and-publish-mac-x64-debug:
-  #   needs: [get-env]
+  #   needs: [get-v8-version]
   #   uses: ./.github/workflows/MAC_LATEST_REUSABLE.yml
   #   with:
-  #     v8_branch: ${{ needs.get-env.outputs.V8_BRANCH }}
+  #     v8_branch: ${{ needs.get-v8-version.outputs.V8_VERSION }}
   #     build_type: debug
   #     arch: x64
   #   secrets:
@@ -94,10 +83,10 @@ jobs:
   #     AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY_ID }}
 
   # build-and-publish-mac-arm64-release:
-  #   needs: [get-env]
+  #   needs: [get-v8-version]
   #   uses: ./.github/workflows/MAC_LATEST_REUSABLE.yml
   #   with:
-  #     v8_branch: ${{ needs.get-env.outputs.V8_BRANCH }}
+  #     v8_branch: ${{ needs.get-v8-version.outputs.V8_VERSION }}
   #     build_type: release
   #     arch: arm64
   #   secrets:
@@ -105,10 +94,10 @@ jobs:
   #     AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY_ID }}
 
   # build-and-publish-mac-arm64-debug:
-  #   needs: [get-env]
+  #   needs: [get-v8-version]
   #   uses: ./.github/workflows/MAC_LATEST_REUSABLE.yml
   #   with:
-  #     v8_branch: ${{ needs.get-env.outputs.V8_BRANCH }}
+  #     v8_branch: ${{ needs.get-v8-version.outputs.V8_VERSION }}
   #     build_type: debug
   #     arch: arm64
   #   secrets:
