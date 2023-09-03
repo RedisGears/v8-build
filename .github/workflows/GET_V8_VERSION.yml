@@ -17,6 +17,7 @@ jobs:
     name: Get Current V8 Version
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Get V8 version
         run: |
           export V8_VERSION=`cat ./V8_VERSION.txt`
