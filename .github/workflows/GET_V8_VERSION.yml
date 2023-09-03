@@ -16,9 +16,12 @@ jobs:
   get-env:
     name: Get Current V8 Version
     runs-on: ubuntu-latest
+    outputs:
+      V8_VERSION: ${{ steps.get-v8-version.outputs.V8_VERSION }}
     steps:
       - uses: actions/checkout@v3
       - name: Get V8 version
+        id: get-v8-version
         run: |
           export V8_VERSION=`cat ./V8_VERSION.txt`
           echo "V8_VERSION=$V8_VERSION" >> "$GITHUB_OUTPUT"
