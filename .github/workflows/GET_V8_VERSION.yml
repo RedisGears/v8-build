@@ -17,6 +17,7 @@ jobs:
     name: Get Current V8 Version
     runs-on: ubuntu-latest
     steps:
-      run: |
-        export V8_VERSION=`cat ./V8_VERSION.txt`
-        echo "V8_VERSION=$V8_VERSION" >> "$GITHUB_OUTPUT"
+      - name: Get V8 version
+        run: |
+          export V8_VERSION=`cat ./V8_VERSION.txt`
+          echo "V8_VERSION=$V8_VERSION" >> "$GITHUB_OUTPUT"
