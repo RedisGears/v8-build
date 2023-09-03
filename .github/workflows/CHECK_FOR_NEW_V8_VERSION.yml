@@ -37,6 +37,7 @@ jobs:
         env:
           latest_version: ${{ steps.get-latest-version.outputs.latest_version }}
         run: |
+          echo `git show-branch origin/update_version_to_11.6.189.20`
           export branch_exists=`git show-branch origin/update_version_to_${{ steps.get-latest-version.outputs.latest_version }} &>/dev/null && echo yes || echo no`
           echo "branch_exists=$branch_exists" >> "$GITHUB_OUTPUT"
       - name: Create PR if needed
