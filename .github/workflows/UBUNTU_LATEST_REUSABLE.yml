@@ -45,11 +45,13 @@ jobs:
           rm -rf s3uploads/libv8.${{ inputs.v8_branch }}.include
       - name: Upload artifacts
         uses: s3-actions/s3cmd@v1.2.0
+        if: ${{ github.ref == 'refs/heads/master' }}
         with:
           provider: aws
           region: us-east-2
           access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_key: ${{ secrets.AWS_SECRET_KEY_ID }}
       - name: Upload artifacts
+        if: ${{ github.ref == 'refs/heads/master' }}
         run: |
           s3cmd put -P s3uploads/* s3://redismodules/redisgears/dependencies/
