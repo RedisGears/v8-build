@@ -21,8 +21,8 @@ jobs:
       - name: Checkout v8 and set the version on env var
         id: get-latest-version
         run: |
-          export v1=`echo ${{ needs.get-v8-version.output.V8_VERSION }} | cut -d'.' -f1`
-          export v2=`echo ${{ needs.get-v8-version.output.V8_VERSION }} | cut -d'.' -f2`
+          export v1=`echo ${{ needs.get-v8-version.outputs.V8_VERSION }} | cut -d'.' -f1`
+          export v2=`echo ${{ needs.get-v8-version.outputs.V8_VERSION }} | cut -d'.' -f2`
           export version=$v1.$v2
           export PATH="${PATH}:$(pwd)/depot_tools/"
           gclient
@@ -45,7 +45,7 @@ jobs:
         env:
           latest_version: ${{ steps.get-latest-version.outputs.latest_version }}
           branch_exists: ${{ steps.is-branch-exists.outputs.branch_exists }}
-        if: ${{needs.get-v8-version.output.V8_VERSION != env.latest_version && env.branch_exists == 'no'}}
+        if: ${{needs.get-v8-version.outputs.V8_VERSION != env.latest_version && env.branch_exists == 'no'}}
         run: |
           echo "New version was tagged we should build it!!"
 
