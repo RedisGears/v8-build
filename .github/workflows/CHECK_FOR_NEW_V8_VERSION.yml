@@ -1,0 +1,42 @@
+name: Check for new V8 version
+
+on:
+  workflow_call:
+    inputs:
+      current_v8_version:
+        required: true
+        type: string
+
+jobs:
+
+  check-for-new-V8-version:
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install depot_tools
+        run: |
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+      - name: Checkout v8 and set the version on env var
+        id: get-latest-version
+        run: |
+          export v1=`echo ${{ inputs.current_v8_version }} | cut -d'.' -f1`
+          export v2=`echo ${{ inputs.current_v8_version }} | cut -d'.' -f1`
+          export version=$v1.$v2
+          export PATH="${PATH}:$(pwd)/depot_tools/"
+          gclient
+          mkdir v8
+          cd v8
+          fetch v8
+          cd v8
+          git checkout branch-heads/$version
+          export latest_version=`git describe --tags --exact-match`
+          echo "latest_version=$latest_version" >> "$GITHUB_OUTPUT"
+      - name: Create PR if needed
+        env:
+          latest_version: ${{ steps.get-latest-version.outputs.latest_version }}
+        if: ${{inputs.current_v8_version != env.latest_version}}
+        run: |
+          echo "New version was tagged we should build it!!"
+
+      
