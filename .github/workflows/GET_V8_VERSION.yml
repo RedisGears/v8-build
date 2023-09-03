@@ -17,4 +17,4 @@ jobs:
     name: Get Current V8 Version
     runs-on: ubuntu-latest
     steps:
-      - run: echo "V8_VERSION=`tail V8_VERSION.txt`" >> "$GITHUB_OUTPUT"
+      - run: echo "V8_VERSION=`tail ./V8_VERSION.txt`" >> "$GITHUB_OUTPUT"
