@@ -1,9 +1,9 @@
 name: Check for new V8 version
 
 on:
-
+  pull_request:
+    branches: [ master ]
   workflow_dispatch:
-
   schedule:
     - cron: "0 5 * * *"
 
@@ -50,7 +50,7 @@ jobs:
           branch_exists: ${{ steps.is-branch-exists.outputs.branch_exists }}
           branch_name: ${{ steps.is-branch-exists.outputs.branch_name }}
           GH_TOKEN: ${{ github.token }}
-        if: ${{needs.get-v8-version.outputs.V8_VERSION != env.latest_version && env.branch_exists == 'no'}}
+        if: ${{ needs.get-v8-version.outputs.V8_VERSION < env.latest_version && env.branch_exists == 'no'}}
         run: |
           sed -i 's/${{ needs.get-v8-version.outputs.V8_VERSION }}/${{ env.latest_version }}/g' ./V8_VERSION.txt
           git config --global user.email "auto@redis.com"
