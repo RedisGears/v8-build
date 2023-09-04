@@ -1,8 +1,6 @@
 name: Check for new V8 version
 
 on:
-  pull_request:
-    branches: [ master ]
   workflow_dispatch:
   schedule:
     - cron: "0 5 * * *"
