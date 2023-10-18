@@ -1,0 +1,62 @@
+name: Trigger manual build
+
+on:
+  workflow_dispatch:
+    inputs:
+      v8_branch:
+        description: 'The branch/tag/sha to run the build on'
+        default: 'main'
+        type: string
+        required: true
+      build_type:
+        description: 'The build type'
+        default: 'release'
+        type: choice
+        options:
+        - release
+        - debug
+      arch:
+        description: 'Architecture'
+        default: 'x64'
+        type: choice
+        options:
+        - x64
+        - arm64
+      os:
+        description: 'Os'
+        default: 'Linux'
+        type: choice
+        options:
+        - Linux
+        - Mac
+        - All
+      upload_artifacts:
+        type: boolean
+        default: false
+
+jobs:
+
+  v8-mac-build:
+    uses: ./.github/workflows/MAC_LATEST_REUSABLE.yml
+    if: ${{ inputs.os == 'Mac' || inputs.os == 'All' }}
+    with:
+      v8_branch: ${{ inputs.v8_branch }}
+      build_type: ${{ inputs.build_type }}
+      arch: ${{ inputs.arch }}
+      upload_artifacts: ${{ inputs.upload_artifacts }}
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY_ID }}
+
+  v8-linux-build:
+    uses: ./.github/workflows/UBUNTU_LATEST_REUSABLE.yml
+    if: ${{ inputs.os == 'Linux' || inputs.os == 'All' }}
+    with:
+      v8_branch: ${{ inputs.v8_branch }}
+      build_type: ${{ inputs.build_type }}
+      arch: ${{ inputs.arch }}
+      copy_headers: true
+      upload_artifacts: ${{ inputs.upload_artifacts }}
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY_ID }}
