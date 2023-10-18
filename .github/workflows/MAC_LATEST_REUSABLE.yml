@@ -12,6 +12,10 @@ on:
       arch:
         required: true
         type: string
+      upload_artifacts:
+        required: false
+        type: boolean
+        default: false
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -54,13 +58,13 @@ jobs:
           cp v8/v8/out.gn/${{ inputs.arch }}.${{ inputs.build_type }}/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.${{ inputs.arch }}.${{ inputs.build_type }}.apple-darwin.a
       - name: Configure s3cmd
         uses: s3-actions/s3cmd@v1.2.0
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/master' || inputs.upload_artifacts == true }}
         with:
           provider: aws
           region: us-east-2
           access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_key: ${{ secrets.AWS_SECRET_KEY_ID }}
       - name: Upload artifacts
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/master' || inputs.upload_artifacts == true }}
         run: |
           s3cmd put -P s3uploads/* s3://redismodules/redisgears/dependencies/

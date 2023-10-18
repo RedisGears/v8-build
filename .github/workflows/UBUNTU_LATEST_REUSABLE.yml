@@ -16,6 +16,10 @@ on:
         required: false
         type: boolean
         default: false
+      upload_artifacts:
+        required: false
+        type: boolean
+        default: false
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -38,20 +42,20 @@ jobs:
           mkdir s3uploads
           docker cp v8_build_container:/build/v8/v8/out.gn/${{ inputs.arch }}.${{ inputs.build_type }}/obj/libv8_monolith.a s3uploads/libv8_monolith.${{ inputs.v8_branch }}.${{ inputs.arch }}.${{ inputs.build_type }}.linux.a
       - name: Copy headers
-        if: ${{inputs.copy_headers == true}}
+        if: ${{ inputs.copy_headers == true || inputs.upload_artifacts == true }}
         run: |
           docker cp v8_build_container:/build/v8/v8/include s3uploads/libv8.${{ inputs.v8_branch }}.include
           pushd s3uploads/libv8.${{ inputs.v8_branch }}.include/; zip -r ../libv8.${{ inputs.v8_branch }}.include.zip *; popd
           rm -rf s3uploads/libv8.${{ inputs.v8_branch }}.include
       - name: Upload artifacts
         uses: s3-actions/s3cmd@v1.2.0
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/master' || inputs.upload_artifacts == true }}
         with:
           provider: aws
           region: us-east-2
           access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_key: ${{ secrets.AWS_SECRET_KEY_ID }}
       - name: Upload artifacts
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/master' || inputs.upload_artifacts == true }}
         run: |
           s3cmd put -P s3uploads/* s3://redismodules/redisgears/dependencies/
