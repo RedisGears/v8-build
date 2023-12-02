@@ -26,6 +26,7 @@ RUN sed -i 's/"--short"].decode().strip())/"--short"]).decode().strip()/g' ./bui
 RUN sed -i 's/"\/sbin\/init"].decode()):/"\/sbin\/init"]).decode():/g' ./build/install-build-deps.py
 # not need to install snap.
 RUN sed -i 's/packages.append("snapcraft")/pass/g' ./build/install-build-deps.py
+RUN DEBIAN_FRONTEND=noninteractive apt-get install keyboard-configuration
 RUN ./build/install-build-deps.sh --no-prompt
 COPY build_linux_${ARCH}.${BUILD_TYPE}.bash .
 RUN /bin/bash ./build_linux_${ARCH}.${BUILD_TYPE}.bash
