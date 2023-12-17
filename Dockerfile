@@ -26,6 +26,13 @@ RUN sed -i 's/"--short"].decode().strip())/"--short"]).decode().strip()/g' ./bui
 RUN sed -i 's/"\/sbin\/init"].decode()):/"\/sbin\/init"]).decode():/g' ./build/install-build-deps.py
 # not need to install snap.
 RUN sed -i 's/packages.append("snapcraft")/pass/g' ./build/install-build-deps.py
+
+# We can assume V8 run with allocator that promise a 16 byte aligned address. for
+# example, when running with jemalloc that was compiled with --with-lg-quantum=3,
+# we might get addresses which are 8 bytes aligned.
+# So we set the alingment assumption that will be used by operator new to 8 bytes.
+RUN sed -i 's/cflags = \[\]/cflags = \["-fnew-alignment=8"\]/g' ./BUILD.gn
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get install keyboard-configuration
 RUN ./build/install-build-deps.sh --no-prompt
 COPY build_linux_${ARCH}.${BUILD_TYPE}.bash .
