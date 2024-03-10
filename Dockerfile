@@ -35,7 +35,7 @@ RUN sed -i 's/cflags = \[\]/cflags = \["-fnew-alignment=8"\]/g' ./BUILD.gn
 
 # This build configuration was missing on 12.2 version.
 # On master branch it is already fixed so we will soon be able to delete this line.
-RUN echo -e "enable_safe_libstdcxx = true" >> build_overrides/build.gni
+RUN echo "enable_safe_libstdcxx = true" >> build_overrides/build.gni
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install keyboard-configuration
 RUN ./build/install-build-deps.sh --no-prompt
