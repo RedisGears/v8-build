@@ -33,6 +33,10 @@ RUN sed -i 's/packages.append("snapcraft")/pass/g' ./build/install-build-deps.py
 # So we set the alingment assumption that will be used by operator new to 8 bytes.
 RUN sed -i 's/cflags = \[\]/cflags = \["-fnew-alignment=8"\]/g' ./BUILD.gn
 
+# This build configuration was missing on 12.2 version.
+# On master branch it is already fixed so we will soon be able to delete this line.
+RUN echo "enable_safe_libstdcxx = true" >> build_overrides/build.gni
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get install keyboard-configuration
 RUN ./build/install-build-deps.sh --no-prompt
 COPY build_linux_${ARCH}.${BUILD_TYPE}.bash .
