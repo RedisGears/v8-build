@@ -39,6 +39,7 @@ RUN echo "enable_safe_libstdcxx = true" >> build_overrides/build.gni
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install keyboard-configuration
 RUN ./build/install-build-deps.sh --no-prompt
+RUN gclient sync
 COPY build_linux_${ARCH}.${BUILD_TYPE}.bash .
 RUN /bin/bash ./build_linux_${ARCH}.${BUILD_TYPE}.bash
 
