@@ -49,6 +49,7 @@ jobs:
           git checkout ${{ inputs.v8_branch }}
           gsed -i 's/#include <uchar.h>//g' ./src/inspector/v8-string-conversions.h
           gsed -i 's/#include <uchar.h>//g' ./src/inspector/string-16.h
+          gclient sync
       - name: Build v8
         run: |
           bash ./build_mac_${{ inputs.arch }}.${{ inputs.build_type }}.bash
